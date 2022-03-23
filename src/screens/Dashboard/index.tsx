@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/core';
 import React, { useRef, useState } from 'react';
-import { TextInput } from 'react-native';
+import { Alert, TextInput } from 'react-native';
 
 import { Background } from '../../components/Background';
 import { Card } from '../../components/Card';
@@ -28,18 +28,26 @@ export function Dashboard() {
 
   function handleAddRepository() {
     /**
-     * TODO: 
+     * TODO:
      * - call addRepository function sending inputText value;
      * - clean inputText value.
      */
-    inputRef.current?.blur();
+    try {
+      addRepository(inputText)
+      inputRef.current?.blur();
+      setInputText('')
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   function handleRepositoryPageNavigation(id: number) {
+
+    navigate('Repository', { repositoryId: id })
     /**
      * TODO - navigate to the Repository screen sending repository id.
      * Remember to use the correct prop name (repositoryId) to the repositoy id:
-     * 
+     *
      * navigate(SCREEN NAME, {
      *  repositoryId: id of the repository
      * })
@@ -58,10 +66,11 @@ export function Dashboard() {
               placeholder="Digite aqui 'usuário/repositório'"
               value={inputText}
               /**
-               * TODO - update inputText value when input text value 
+               * TODO - update inputText value when input text value
                * changes:
                * onChangeText={YOUR CODE HERE}
                */
+              onChangeText={setInputText}
               onSubmitEditing={handleAddRepository}
               returnKeyType="send"
               autoCapitalize='none'
@@ -71,8 +80,9 @@ export function Dashboard() {
             <InputButton
               testID="input-button"
               onPress={handleAddRepository}
+              disabled={inputText === ''}
             /**
-             * TODO - ensure to disable button when inputText is 
+             * TODO - ensure to disable button when inputText is
              * empty (use disabled prop to this):
              * disabled={CONDITION HERE}
              */
